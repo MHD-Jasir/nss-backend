@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Department {
+  id        String   @id
+  name      String
+  isActive  Boolean  @default(true) @map("isActive")
+  createdAt DateTime @default(now()) @map("createdAt")
+
+  @@map("departments")
+}
+
+model RegisteredStudent {
+  id                String   @id
+  name              String
+  email             String
+  phone             String
+  department        String
+  year              String
+  enrollmentNumber  String   @map("enrollmentNumber")
+  createdAt         DateTime @default(now()) @map("createdAt")
+
+  @@map("registered_students")
+}
+
+model Coordinator {
+  id           String   @id
+  name         String
+  email        String
+  phone        String
+  department   String
+  position     String
+  isActive     Boolean  @default(true) @map("isActive")
+  createdAt    DateTime @default(now()) @map("createdAt")
+
+  @@map("coordinators")
+}
+
+model Program {
+  id                String   @id
+  title             String
+  description       String?
+  type              String   @default("academic")
+  startDate         DateTime @map("startDate")
+  endDate           DateTime @map("endDate")
+  maxParticipants   Int      @map("maxParticipants")
+  registrationOpen  Boolean  @default(true) @map("registrationOpen")
+  department        String
+  coordinator       String
+  createdAt         DateTime @default(now()) @map("createdAt")
+
+  @@map("programs")
+}
+
+model OfficerCredential {
+  id           String   @id
+  username     String   @unique
+  passwordHash String   @map("passwordHash")
+  name         String
+  email        String
+  role         String   @default("officer")
+  isActive     Boolean  @default(true) @map("isActive")
+  createdAt    DateTime @default(now()) @map("createdAt")
+
+  @@map("officer_credentials")
+}
+
+model HomepageImage {
+  id       String @id
+  url      String
+  type     String // 'left' or 'right'
+  order    Int    @default(0)
+  isActive Boolean @default(true) @map("isActive")
+
+  @@map("homepage_images")
+}
+
+model StudentReport {
+  id                  String   @id
+  studentId           String   @map("studentId")
+  studentName         String   @map("studentName") 
+  department          String
+  year                String
+  activities          String[] // Array of activity strings
+  coordinatedPrograms String[] @default([]) @map("coordinatedPrograms")
+  createdAt           DateTime @default(now()) @map("createdAt")
+  updatedAt           DateTime @updatedAt @map("updatedAt")
+
+  @@map("student_reports")
+}
